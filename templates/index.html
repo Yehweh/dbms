@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InventoryHub - Retro Futuristic Inventory Management</title>
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Google Fonts for Retro Futuristic UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <!-- Retro Futuristic Cyber Grid & Glow Backdrop -->
+    <div class="cyber-bg-grid"></div>
+    <div class="cyber-ambient-glow"></div>
+
+    <div class="container">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar" id="sidebar">
+        <div class="logo">
+          <div class="logo-icon-wrap">
+            <i class="fas fa-cube"></i>
+          </div>
+          <div>
+            <h2>INVENTORYHUB</h2>
+            <p><span class="status-dot green"></span> CYBER DASHBOARD v2.5</p>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <a class="nav-item active" data-view="dashboard">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+          </a>
+          <a class="nav-item" data-view="products">
+            <i class="fas fa-box"></i>
+            <span>Products</span>
+          </a>
+          <a class="nav-item" data-view="categories">
+            <i class="fas fa-tags"></i>
+            <span>Categories</span>
+          </a>
+          <a class="nav-item" data-view="suppliers">
+            <i class="fas fa-truck"></i>
+            <span>Suppliers</span>
+          </a>
+          <a class="nav-item" data-view="stock">
+            <i class="fas fa-warehouse"></i>
+            <span>Inventory</span>
+          </a>
+          <a class="nav-item" data-view="orders">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Orders</span>
+          </a>
+          <a class="nav-item" data-view="users">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+          </a>
+          <a class="nav-item" data-view="reports">
+            <i class="fas fa-file-alt"></i>
+            <span>Reports</span>
+          </a>
+          <a class="nav-item" data-view="analytics">
+            <i class="fas fa-chart-pie"></i>
+            <span>Analytics</span>
+          </a>
+          <a class="nav-item" data-view="summary">
+            <i class="fas fa-layer-group"></i>
+            <span>Summary</span>
+          </a>
+          <a class="nav-item" data-view="restock">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Restock</span>
+          </a>
+          <a class="nav-item" data-view="history">
+            <i class="fas fa-history"></i>
+            <span>History</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="sys-status">
+            <span class="sys-pulse"></span> SYSTEM ONLINE
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+          <div class="header-left">
+            <button class="menu-toggle" id="menu-toggle">
+              <i class="fas fa-bars"></i>
+            </button>
+            <h1 id="page-title">Dashboard</h1>
+          </div>
+          <div class="header-right">
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input type="text" id="search-input" placeholder="Search..." />
+            </div>
+            <div class="notification-wrapper">
+              <button class="notification-btn" id="notification-btn">
+                <i class="fas fa-bell"></i>
+                <span class="badge" id="notification-badge">0</span>
+              </button>
+              <div class="notification-dropdown" id="notification-dropdown">
+                <div class="notification-header">
+                  <h3>Notifications</h3>
+                  <button id="clear-notifications" class="btn-text">
+                    Clear All
+                  </button>
+                </div>
+                <div class="notification-list" id="notification-list">
+                  <div class="notification-empty">No new notifications</div>
+                </div>
+                <div class="notification-footer">
+                  <a
+                    href="#"
+                    onclick="
+                      switchView('restock');
+                      return false;
+                    "
+                    >View Restock List</a
+                  >
+                </div>
+              </div>
+            </div>
+            <button
+              class="theme-toggle-btn"
+              id="theme-toggle"
+              title="Toggle Dark/Light Mode"
+            >
+              <i class="fas fa-moon"></i>
+            </button>
+            <button class="btn-primary" id="add-btn" style="display: none">
+              <i class="fas fa-plus"></i>
+              Add New
+            </button>
+          </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content">
+          <!-- Dashboard View -->
+          <div id="dashboard-view" class="view active">
+            <div class="metrics-grid">
+              <div class="metric-card">
+                <div class="metric-header">
+                  <div>
+                    <div class="metric-label">Total Revenue</div>
+                    <div class="metric-value" id="metric-revenue">₹0</div>
+                  </div>
+                  <i class="fas fa-rupee-sign"></i>
+                </div>
+                <div class="metric-trend positive">
+                  <i class="fas fa-arrow-up"></i> +12.5% this month
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-header">
+                  <div>
+                    <div class="metric-label">Sale Orders</div>
+                    <div class="metric-value" id="metric-orders">0</div>
+                  </div>
+                  <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="metric-trend positive">
+                  <i class="fas fa-arrow-up"></i> Growing
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-header">
+                  <div>
+                    <div class="metric-label">Inventory Value</div>
+                    <div class="metric-value" id="metric-inventory">₹0</div>
+                  </div>
+                  <i class="fas fa-boxes"></i>
+                </div>
+                <div class="metric-trend">
+                  <i class="fas fa-info-circle"></i> Total stock value
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-header">
+                  <div>
+                    <div class="metric-label">In Stock Units</div>
+                    <div class="metric-value" id="metric-units">0</div>
+                  </div>
+                  <i class="fas fa-layer-group"></i>
+                </div>
+                <div class="metric-trend">
+                  <i class="fas fa-info-circle"></i> Total units
+                </div>
+              </div>
+            </div>
+
+            <div class="dashboard-grid">
+              <div class="dashboard-section">
+                <div class="section-header">
+                  <h3>
+                    <i class="fas fa-exclamation-triangle"></i> Low Stock Items
+                  </h3>
+                  <a
+                    href="#"
+                    class="view-all"
+                    onclick="
+                      switchView('restock');
+                      return false;
+                    "
+                    >View All</a
+                  >
+                </div>
+                <div style="padding: 1.5rem; overflow-x: auto">
+                  <table class="modern-table">
+                    <thead>
+                      <tr>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th>Warehouse</th>
+                        <th>Units</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="low-stock-body">
+                      <tr>
+                        <td colspan="5" style="text-align: center; color: #999">
+                          Loading...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="dashboard-section">
+                <div class="section-header">
+                  <h3><i class="fas fa-star"></i> Top Items</h3>
+                  <a
+                    href="#"
+                    class="view-all"
+                    onclick="
+                      switchView('analytics');
+                      return false;
+                    "
+                    >View All</a
+                  >
+                </div>
+                <div style="padding: 1.5rem; overflow-x: auto">
+                  <table class="modern-table">
+                    <thead>
+                      <tr>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th>Units</th>
+                        <th>Popularity</th>
+                      </tr>
+                    </thead>
+                    <tbody id="top-selling-body">
+                      <tr>
+                        <td colspan="4" style="text-align: center; color: #999">
+                          Loading...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Products View -->
+          <div id="products-view" class="view">
+            <div class="section-toolbar">
+              <input
+                type="text"
+                class="search-input"
+                placeholder="Search products..."
+              />
+            </div>
+            <div style="overflow-x: auto">
+              <table class="modern-table">
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th>SKU</th>
+                    <th>Category</th>
+                    <th>Stock</th>
+                    <th>Price (₹)</th>
+                    <th>Popularity</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="products-body">
+                  <tr>
+                    <td colspan="5" style="text-align: center; color: #999">
+                      Loading...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Categories View -->
+          <div id="categories-view" class="view">
+            <div class="section-toolbar">
+              <input
+                type="text"
+                class="search-input"
+                placeholder="Search categories..."
+              />
+            </div>
+            <div style="overflow-x: auto">
+              <table class="modern-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Category Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="categories-body">
+                  <tr>
+                    <td colspan="4" style="text-align: center; color: #999">
+                      Loading...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Suppliers View -->
+          <div id="suppliers-view" class="view">
+            <div class="section-toolbar">
+              <input
+                type="text"
+                class="search-input"
+                placeholder="Search suppliers..."
+              />
+            </div>
+            <div style="overflow-x: auto">
+              <table class="modern-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Supplier Name</th>
+                    <th>Contact No</th>
+                    <th>Address</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="suppliers-body">
+                  <tr>
+                    <td colspan="5" style="text-align: center; color: #999">
+                      Loading...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Stock View -->
+          <div id="stock-view" class="view">
+            <div class="section-toolbar">
+              <input
+                type="text"
+                class="search-input"
+                placeholder="Search inventory..."
+              />
+            </div>
+            <div style="overflow-x: auto">
+              <table class="modern-table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>SKU</th>
+                    <th>Warehouse</th>
+                    <th>Quantity</th>
+                    <th>Price (₹)</th>
+                    <th>Total Value (₹)</th>
+                    <th>Status</th>
+                    <th>Updated</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="stock-body">
+                  <tr>
+                    <td colspan="9" style="text-align: center; color: #999">
+                      Loading...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Orders View -->
+          <div id="orders-view" class="view">
+            <div class="section-toolbar">
+              <input
+                type="text"
+                class="search-input"
+                placeholder="Search orders..."
+              />
+            </div>
+            <div style="overflow-x: auto">
+              <table class="modern-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>User</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="orders-body">
+                  <tr>
+                    <td colspan="6" style="text-align: center; color: #999">
+                      Loading...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Users View -->
+          <div id="users-view" class="view">
+            <div class="section-toolbar">
+              <input
+                type="text"
+                class="search-input"
+                placeholder="Search users..."
+              />
+            </div>
+            <div style="overflow-x: auto">
+              <table class="modern-table">
+                <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="users-body">
+                  <tr>
+                    <td colspan="4" style="text-align: center; color: #999">
+                      Loading...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Reports View -->
+          <div id="reports-view" class="view">
+            <div class="reports-container">
+              <div class="report-card">
+                <div class="report-card-header">
+                  <h3><i class="fas fa-cubes"></i> Inventory Report</h3>
+                </div>
+                <div class="report-card-body">
+                  <p>
+                    Complete stock, warehouse, and inventory status overview
+                  </p>
+                  <button
+                    class="btn-primary"
+                    onclick="generateReport('inventory')"
+                  >
+                    <i class="fas fa-file-pdf"></i> Generate PDF
+                  </button>
+                </div>
+              </div>
+
+              <div class="report-card">
+                <div class="report-card-header">
+                  <h3><i class="fas fa-shopping-cart"></i> Orders Report</h3>
+                </div>
+                <div class="report-card-body">
+                  <p>Sales and purchase orders summary with user breakdown</p>
+                  <button
+                    class="btn-primary"
+                    onclick="generateReport('orders')"
+                  >
+                    <i class="fas fa-file-pdf"></i> Generate PDF
+                  </button>
+                </div>
+              </div>
+
+              <div class="report-card">
+                <div class="report-card-header">
+                  <h3><i class="fas fa-box"></i> Product Analytics</h3>
+                </div>
+                <div class="report-card-body">
+                  <p>Product pricing, category, and supplier analysis</p>
+                  <button
+                    class="btn-primary"
+                    onclick="generateReport('product-analytics')"
+                  >
+                    <i class="fas fa-file-pdf"></i> Generate PDF
+                  </button>
+                </div>
+              </div>
+
+              <div class="report-card">
+                <div class="report-card-header">
+                  <h3><i class="fas fa-database"></i> Database Schema</h3>
+                </div>
+                <div class="report-card-body">
+                  <p>Complete database structure and relationships</p>
+                  <button
+                    class="btn-primary"
+                    onclick="generateReport('db-schema')"
+                  >
+                    <i class="fas fa-file-pdf"></i> View Schema PDF
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reports are now downloaded directly -->
+          </div>
+
+          <!-- Analytics View -->
+          <div id="analytics-view" class="view">
+            <div class="analytics-container">
+              <div class="analytics-controls">
+                <div class="control-group">
+                  <label>Chart Type:</label>
+                  <select
+                    id="chart-type-select"
+                    onchange="updateAnalyticsChart()"
+                  >
+                    <option value="inventory">Inventory Status</option>
+                    <option value="category">Category Breakdown</option>
+                    <option value="orders">Order Distribution</option>
+                    <option value="prices">Product Price Analysis</option>
+                  </select>
+                </div>
+                <div class="control-group">
+                  <label>Comparison Metric:</label>
+                  <select
+                    id="chart-metric-select"
+                    onchange="updateAnalyticsChart()"
+                  >
+                    <option value="units">By Units (Quantity)</option>
+                    <option value="value">By Value (Rupees)</option>
+                    <option value="count">By Item Count</option>
+                  </select>
+                </div>
+              </div>
+              <div class="analytics-main-card">
+                <div
+                  class="chart-container"
+                  style="position: relative; height: 50vh; width: 100%"
+                >
+                  <canvas id="main-analytics-chart"></canvas>
+                </div>
+                <div
+                  id="analytics-summary-text"
+                  class="analytics-summary-text"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary View (Stock Valuation) -->
+          <div id="summary-view" class="view">
+            <div class="summary-container">
+              <div class="summary-header">
+                <h2><i class="fas fa-layer-group"></i> Warehouse Summary</h2>
+                <p>Total inventory valuation and by-category breakdown</p>
+              </div>
+              <div class="summary-grid">
+                <div class="summary-card big">
+                  <div class="summary-value" id="total-inventory-value">₹0</div>
+                  <div class="summary-label">Total Inventory Value</div>
+                  <div class="summary-detail">All warehouse stock</div>
+                </div>
+                <div class="summary-card">
+                  <div class="summary-value" id="total-unique-items">0</div>
+                  <div class="summary-label">Unique Items</div>
+                </div>
+                <div class="summary-card">
+                  <div class="summary-value" id="total-units">0</div>
+                  <div class="summary-label">Total Units</div>
+                </div>
+              </div>
+              <div class="summary-section">
+                <h3>Breakdown by Category</h3>
+                <div id="summary-by-category" class="category-breakdown"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Restock List View -->
+          <div id="restock-view" class="view">
+            <div class="restock-container">
+              <div class="restock-header">
+                <h2>
+                  <i class="fas fa-exclamation-triangle"></i> Restock List
+                </h2>
+                <p>
+                  Products with stock below threshold - Click supplier contact
+                  to order
+                </p>
+              </div>
+              <div class="restock-controls">
+                <label>Threshold:</label>
+                <input
+                  type="number"
+                  id="restock-threshold"
+                  value="10"
+                  min="1"
+                  onchange="loadRestockList()"
+                />
+                <button class="btn-primary" onclick="loadRestockList()">
+                  <i class="fas fa-sync"></i> Refresh
+                </button>
+              </div>
+              <div id="restock-list" class="restock-list"></div>
+            </div>
+          </div>
+
+          <!-- History View (Transaction + Audit) -->
+          <div id="history-view" class="view">
+            <div class="history-container">
+              <div class="history-header">
+                <h2>
+                  <i class="fas fa-history"></i> Transaction & Audit History
+                </h2>
+                <div class="header-actions">
+                  <button class="btn-primary" onclick="loadHistory()">
+                    <i class="fas fa-sync"></i> Refresh Logs
+                  </button>
+                  <p>Track all stock movements and database changes</p>
+                </div>
+              </div>
+              <div class="history-tabs">
+                <button
+                  class="history-tab active"
+                  onclick="switchHistoryTab('transactions')"
+                >
+                  <i class="fas fa-exchange-alt"></i> Transactions (Last 50)
+                </button>
+                <button class="history-tab" onclick="switchHistoryTab('audit')">
+                  <i class="fas fa-clipboard-list"></i> Audit Log (Last 100)
+                </button>
+              </div>
+              <div id="transactions-tab" class="history-tab-content active">
+                <table class="history-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Item</th>
+                      <th>Type</th>
+                      <th>Quantity</th>
+                      <th>Reference</th>
+                      <th>By</th>
+                      <th>Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody id="transactions-table-body"></tbody>
+                </table>
+              </div>
+              <div id="audit-tab" class="history-tab-content">
+                <table class="history-table">
+                  <thead>
+                    <tr>
+                      <th>Date & Time</th>
+                      <th>Table</th>
+                      <th>Action</th>
+                      <th>By</th>
+                      <th>Details</th>
+                    </tr>
+                  </thead>
+                  <tbody id="audit-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-overlay"></div>
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h2 id="modal-title">Add New Item</h2>
+          <button class="modal-close" id="modal-close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <form id="modal-form">
+          <div class="modal-body">
+            <div id="modal-fields"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary" id="modal-cancel">
+              Cancel
+            </button>
+            <button type="submit" class="btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  </body>
+</html>
