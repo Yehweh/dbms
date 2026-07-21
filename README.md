@@ -1,4 +1,4 @@
-# ⚡ InventoryHub — Retro Futuristic Inventory Management System
+# ⚡ InventoryHub — Inventory Management System
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-3.0%2B-00f0ff.svg?logo=flask&logoColor=white)](https://flask.palletsprojects.com)
