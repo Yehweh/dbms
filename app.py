@@ -12,11 +12,24 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-    f"mysql+pymysql://{os.getenv('MYSQL_USER')}:{os.getenv('MYSQL_PASSWORD')}@"
-    f"{os.getenv('MYSQL_HOST')}/{os.getenv('MYSQL_DB')}"
-)
+# Database configuration (Oracle SQL / SQL*Plus)
+oracle_user = os.getenv('ORACLE_USER', 'system')
+oracle_password = os.getenv('ORACLE_PASSWORD', '')
+oracle_host = os.getenv('ORACLE_HOST', 'localhost')
+oracle_port = os.getenv('ORACLE_PORT', '1521')
+oracle_service = os.getenv('ORACLE_SERVICE', 'XEPDB1')
+oracle_sid = os.getenv('ORACLE_SID')
+
+if os.getenv('DATABASE_URL'):
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+elif oracle_sid:
+    app.config['SQLALCHEMY_DATABASE_URI'] = (
+        f"oracle+oracledb://{oracle_user}:{oracle_password}@{oracle_host}:{oracle_port}/?sid={oracle_sid}"
+    )
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = (
+        f"oracle+oracledb://{oracle_user}:{oracle_password}@{oracle_host}:{oracle_port}/?service_name={oracle_service}"
+    )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JSON_SORT_KEYS'] = False
 
@@ -1362,11 +1375,11 @@ def get_transaction_history():
                 th.transaction_date,
                 u.username,
                 th.notes
-            FROM TransactionHistory th
+            FROM "TransactionHistory" th
             JOIN item i ON th.item_id = i.item_id
-            LEFT JOIN user u ON th.created_by = u.user_id
+            LEFT JOIN "user" u ON th.created_by = u.user_id
             ORDER BY th.transaction_date DESC
-            LIMIT :limit
+            FETCH FIRST :limit ROWS ONLY
         """)
         
         result = db.session.execute(query, {'limit': limit}).fetchall()
@@ -1404,7 +1417,7 @@ def get_popular_products():
                     SELECT SUM(quantity) as sub_sold 
                     FROM orderdetail 
                     GROUP BY item_id
-                ) as averages
+                ) averages
             )
             ORDER BY total_sold DESC
         """)
@@ -1443,6 +1456,30 @@ def get_audit_log(audit_id):
             return jsonify({'error': 'Audit log not found'}), 404
         return jsonify(log.to_dict())
     except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# ==================== ML PREDICTIONS & PROFIT OPTIMIZATION ====================
+@app.route('/api/ml/forecast', methods=['GET'])
+def get_ml_forecast():
+    """
+    Machine Learning endpoint for Sales Forecasting, Profit & Loss analysis,
+    and operational recommendations using Scikit-Learn.
+    """
+    try:
+        from ml_engine import analyze_inventory_ml
+        days = request.args.get('days', 14, type=int)
+        days = max(7, min(days, 60))
+        
+        items = Item.query.all()
+        stocks = Stock.query.all()
+        orders = Order.query.all()
+        order_details = OrderDetail.query.all()
+        
+        results = analyze_inventory_ml(items, stocks, orders, order_details, forecast_days=days)
+        return jsonify(results)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 # ==================== CATEGORIES ====================

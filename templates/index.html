@@ -3,27 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>InventoryHub - Retro Futuristic Inventory Management</title>
+    <title>InventoryHub - Enterprise Inventory System</title>
     <!-- Font Awesome Icons -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <!-- Google Fonts for Retro Futuristic UI -->
+    <!-- Rubik & Inter Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
     <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
-    <!-- Retro Futuristic Cyber Grid & Glow Backdrop -->
-    <div class="cyber-bg-grid"></div>
-    <div class="cyber-ambient-glow"></div>
+    <!-- Premium Dark Glassmorphism Metallic Background -->
+    <div class="glass-bg-mesh" aria-hidden="true">
+      <div class="ambient-bloom bloom-1"></div>
+      <div class="ambient-bloom bloom-2"></div>
+      <div class="ambient-bloom bloom-3"></div>
+      <div class="metallic-shape torus-1"></div>
+      <div class="metallic-shape torus-2"></div>
+      <div class="metallic-shape sphere-1"></div>
+      <div class="metallic-shape sphere-2"></div>
+      <div class="metallic-shape sphere-3"></div>
+      <div class="subtle-noise-overlay"></div>
+    </div>
 
     <div class="container">
       <!-- Sidebar Navigation -->
@@ -34,11 +40,12 @@
           </div>
           <div>
             <h2>INVENTORYHUB</h2>
-            <p><span class="status-dot green"></span> CYBER DASHBOARD v2.5</p>
+            <p><span class="status-dot green"></span> ENTERPRISE OS</p>
           </div>
         </div>
 
         <nav class="nav">
+          <div class="nav-group-label">Operations</div>
           <a class="nav-item active" data-view="dashboard">
             <i class="fas fa-chart-line"></i>
             <span>Dashboard</span>
@@ -46,14 +53,6 @@
           <a class="nav-item" data-view="products">
             <i class="fas fa-box"></i>
             <span>Products</span>
-          </a>
-          <a class="nav-item" data-view="categories">
-            <i class="fas fa-tags"></i>
-            <span>Categories</span>
-          </a>
-          <a class="nav-item" data-view="suppliers">
-            <i class="fas fa-truck"></i>
-            <span>Suppliers</span>
           </a>
           <a class="nav-item" data-view="stock">
             <i class="fas fa-warehouse"></i>
@@ -67,9 +66,21 @@
             <i class="fas fa-users"></i>
             <span>Users</span>
           </a>
-          <a class="nav-item" data-view="reports">
-            <i class="fas fa-file-alt"></i>
-            <span>Reports</span>
+
+          <div class="nav-group-label">Catalog</div>
+          <a class="nav-item" data-view="categories">
+            <i class="fas fa-tags"></i>
+            <span>Categories</span>
+          </a>
+          <a class="nav-item" data-view="suppliers">
+            <i class="fas fa-truck"></i>
+            <span>Suppliers</span>
+          </a>
+
+          <div class="nav-group-label">Insights</div>
+          <a class="nav-item" data-view="ai-optimizer">
+            <i class="fas fa-brain"></i>
+            <span>AI & Profit Forecast</span>
           </a>
           <a class="nav-item" data-view="analytics">
             <i class="fas fa-chart-pie"></i>
@@ -87,6 +98,10 @@
             <i class="fas fa-history"></i>
             <span>History</span>
           </a>
+          <a class="nav-item" data-view="reports">
+            <i class="fas fa-file-alt"></i>
+            <span>Reports</span>
+          </a>
         </nav>
 
         <div class="sidebar-footer">
@@ -101,15 +116,70 @@
         <!-- Header -->
         <header class="header">
           <div class="header-left">
+            <div class="window-controls" aria-hidden="true">
+              <span class="win-dot close"></span>
+              <span class="win-dot min"></span>
+              <span class="win-dot max"></span>
+            </div>
             <button class="menu-toggle" id="menu-toggle">
               <i class="fas fa-bars"></i>
             </button>
             <h1 id="page-title">Dashboard</h1>
+            <div class="scale-popover-wrapper" id="scale-popover-wrapper">
+              <button
+                class="scale-toggle-btn"
+                id="scale-toggle-btn"
+                aria-haspopup="true"
+                aria-expanded="false"
+                title="Scale Content (+/-)"
+              >
+                <span class="scale-pm-icon"><i class="fas fa-plus-minus"></i></span>
+                <span class="scale-pm-label">+/-</span>
+                <span class="scale-current-val" id="scale-current-val">100%</span>
+                <i class="fas fa-chevron-down scale-chevron"></i>
+              </button>
+              <div class="scale-popover-card" id="scale-popover-card" role="dialog" aria-label="Scale Content Size">
+                <div class="scale-popover-header">
+                  <span class="scale-popover-title"><i class="fas fa-up-right-and-down-left-from-center"></i> Scale Size</span>
+                  <span class="scale-popover-badge" id="scale-popover-badge">100%</span>
+                </div>
+                <div class="scale-slider-row">
+                  <button class="scale-step-btn" id="scale-step-down" title="Zoom Out (-5%)" aria-label="Zoom Out">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <div class="slider-track-container">
+                    <input
+                      type="range"
+                      id="content-scale-slider"
+                      class="scale-range-slider"
+                      min="75"
+                      max="135"
+                      value="100"
+                      step="1"
+                      aria-label="Content Scale Slider"
+                    />
+                  </div>
+                  <button class="scale-step-btn" id="scale-step-up" title="Zoom In (+5%)" aria-label="Zoom In">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+                <div class="scale-presets-row">
+                  <button class="scale-preset-chip" data-preset="85">85%</button>
+                  <button class="scale-preset-chip active" data-preset="100">100%</button>
+                  <button class="scale-preset-chip" data-preset="115">115%</button>
+                  <button class="scale-preset-chip" data-preset="125">125%</button>
+                  <button class="scale-reset-chip" id="scale-reset-btn" title="Reset to 100%">
+                    <i class="fas fa-rotate-left"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="header-right">
+            <div class="search-context" id="search-context">Searching dashboard records</div>
             <div class="search-box">
               <i class="fas fa-search"></i>
-              <input type="text" id="search-input" placeholder="Search..." />
+              <input type="text" id="search-input" placeholder="Search dashboard..." />
             </div>
             <div class="notification-wrapper">
               <button class="notification-btn" id="notification-btn">
@@ -153,9 +223,41 @@
         </header>
 
         <!-- Content Area -->
-        <div class="content">
+        <div class="content" id="content-area" data-density="comfortable">
           <!-- Dashboard View -->
           <div id="dashboard-view" class="view active">
+            <div class="dashboard-hero">
+              <div>
+                <p class="eyebrow">Operations hub</p>
+                <h2>Keep stock healthy, orders moving, and decisions fast.</h2>
+                <p class="hero-copy">
+                  Start with the highest-value actions, then scan the live
+                  metrics and exceptions below.
+                </p>
+              </div>
+              <div class="quick-actions-grid">
+                <button class="quick-action-card" data-quick-action="Product">
+                  <i class="fas fa-plus-circle"></i>
+                  <strong>Add Product</strong>
+                  <span>Create a new catalog item.</span>
+                </button>
+                <button class="quick-action-card" data-quick-action="Order">
+                  <i class="fas fa-cart-plus"></i>
+                  <strong>Create Order</strong>
+                  <span>Record a sale or purchase order.</span>
+                </button>
+                <button class="quick-action-card" data-quick-view="restock">
+                  <i class="fas fa-box-open"></i>
+                  <strong>Restock Now</strong>
+                  <span>Jump to low-stock items needing action.</span>
+                </button>
+                <button class="quick-action-card" data-quick-view="reports">
+                  <i class="fas fa-file-export"></i>
+                  <strong>Generate Report</strong>
+                  <span>Open exports and reporting tools.</span>
+                </button>
+              </div>
+            </div>
             <div class="metrics-grid">
               <div class="metric-card">
                 <div class="metric-header">
@@ -287,11 +389,13 @@
           <!-- Products View -->
           <div id="products-view" class="view">
             <div class="section-toolbar">
-              <input
-                type="text"
-                class="search-input"
-                placeholder="Search products..."
-              />
+              <div class="toolbar-main">
+                <div>
+                  <p class="toolbar-eyebrow">Catalog</p>
+                  <h3>Products</h3>
+                </div>
+                <div class="toolbar-filters" id="products-filters"></div>
+              </div>
             </div>
             <div style="overflow-x: auto">
               <table class="modern-table">
@@ -320,11 +424,13 @@
           <!-- Categories View -->
           <div id="categories-view" class="view">
             <div class="section-toolbar">
-              <input
-                type="text"
-                class="search-input"
-                placeholder="Search categories..."
-              />
+              <div class="toolbar-main">
+                <div>
+                  <p class="toolbar-eyebrow">Catalog</p>
+                  <h3>Categories</h3>
+                </div>
+                <div class="toolbar-filters" id="categories-filters"></div>
+              </div>
             </div>
             <div style="overflow-x: auto">
               <table class="modern-table">
@@ -350,11 +456,13 @@
           <!-- Suppliers View -->
           <div id="suppliers-view" class="view">
             <div class="section-toolbar">
-              <input
-                type="text"
-                class="search-input"
-                placeholder="Search suppliers..."
-              />
+              <div class="toolbar-main">
+                <div>
+                  <p class="toolbar-eyebrow">Catalog</p>
+                  <h3>Suppliers</h3>
+                </div>
+                <div class="toolbar-filters" id="suppliers-filters"></div>
+              </div>
             </div>
             <div style="overflow-x: auto">
               <table class="modern-table">
@@ -381,11 +489,13 @@
           <!-- Stock View -->
           <div id="stock-view" class="view">
             <div class="section-toolbar">
-              <input
-                type="text"
-                class="search-input"
-                placeholder="Search inventory..."
-              />
+              <div class="toolbar-main">
+                <div>
+                  <p class="toolbar-eyebrow">Operations</p>
+                  <h3>Inventory</h3>
+                </div>
+                <div class="toolbar-filters" id="stock-filters"></div>
+              </div>
             </div>
             <div style="overflow-x: auto">
               <table class="modern-table">
@@ -416,11 +526,13 @@
           <!-- Orders View -->
           <div id="orders-view" class="view">
             <div class="section-toolbar">
-              <input
-                type="text"
-                class="search-input"
-                placeholder="Search orders..."
-              />
+              <div class="toolbar-main">
+                <div>
+                  <p class="toolbar-eyebrow">Operations</p>
+                  <h3>Orders</h3>
+                </div>
+                <div class="toolbar-filters" id="orders-filters"></div>
+              </div>
             </div>
             <div style="overflow-x: auto">
               <table class="modern-table">
@@ -448,11 +560,13 @@
           <!-- Users View -->
           <div id="users-view" class="view">
             <div class="section-toolbar">
-              <input
-                type="text"
-                class="search-input"
-                placeholder="Search users..."
-              />
+              <div class="toolbar-main">
+                <div>
+                  <p class="toolbar-eyebrow">Access</p>
+                  <h3>Users</h3>
+                </div>
+                <div class="toolbar-filters" id="users-filters"></div>
+              </div>
             </div>
             <div style="overflow-x: auto">
               <table class="modern-table">
@@ -477,6 +591,14 @@
 
           <!-- Reports View -->
           <div id="reports-view" class="view">
+            <div class="view-intro">
+              <p class="toolbar-eyebrow">Reporting</p>
+              <h2>Export the right report for the next decision.</h2>
+              <p>
+                Each export is framed by its best use case so teams can choose
+                the right output faster.
+              </p>
+            </div>
             <div class="reports-container">
               <div class="report-card">
                 <div class="report-card-header">
@@ -486,6 +608,7 @@
                   <p>
                     Complete stock, warehouse, and inventory status overview
                   </p>
+                  <div class="report-use-case">Best for stock audits and daily control checks.</div>
                   <button
                     class="btn-primary"
                     onclick="generateReport('inventory')"
@@ -501,6 +624,7 @@
                 </div>
                 <div class="report-card-body">
                   <p>Sales and purchase orders summary with user breakdown</p>
+                  <div class="report-use-case">Best before sales reviews or procurement meetings.</div>
                   <button
                     class="btn-primary"
                     onclick="generateReport('orders')"
@@ -516,6 +640,7 @@
                 </div>
                 <div class="report-card-body">
                   <p>Product pricing, category, and supplier analysis</p>
+                  <div class="report-use-case">Best for pricing review and assortment planning.</div>
                   <button
                     class="btn-primary"
                     onclick="generateReport('product-analytics')"
@@ -531,6 +656,7 @@
                 </div>
                 <div class="report-card-body">
                   <p>Complete database structure and relationships</p>
+                  <div class="report-use-case">Best for technical handoff and schema validation.</div>
                   <button
                     class="btn-primary"
                     onclick="generateReport('db-schema')"
@@ -547,6 +673,14 @@
           <!-- Analytics View -->
           <div id="analytics-view" class="view">
             <div class="analytics-container">
+              <div class="view-intro">
+                <p class="toolbar-eyebrow">Insights</p>
+                <h2>Read trends, not just charts.</h2>
+                <p>
+                  Switch metrics and chart modes to compare stock mix, pricing,
+                  and order behavior from one place.
+                </p>
+              </div>
               <div class="analytics-controls">
                 <div class="control-group">
                   <label>Chart Type:</label>
@@ -702,6 +836,138 @@
               </div>
             </div>
           </div>
+
+          <!-- AI Demand & Profit Optimizer View -->
+          <div id="ai-optimizer-view" class="view">
+            <div class="view-intro">
+              <div class="view-intro-badge"><i class="fas fa-brain"></i> Machine Learning Intelligence</div>
+              <h2>Sales Prediction & Profit Optimizer</h2>
+              <p>Scikit-Learn regression time-series forecasting, automated profit & loss modeling, and AI-driven recommendations to maximize margins and reduce operations.</p>
+            </div>
+
+            <!-- Horizon & Controls -->
+            <div class="ml-controls-row">
+              <div class="ml-horizon-buttons">
+                <span class="ml-label"><i class="fas fa-calendar-alt"></i> Forecast Horizon:</span>
+                <button class="ml-horizon-btn" data-days="7" onclick="changeMlHorizon(7)">7 Days</button>
+                <button class="ml-horizon-btn active" data-days="14" onclick="changeMlHorizon(14)">14 Days</button>
+                <button class="ml-horizon-btn" data-days="30" onclick="changeMlHorizon(30)">30 Days</button>
+              </div>
+              <button class="btn-primary" onclick="loadMlForecast()"><i class="fas fa-rotate"></i> Re-Train & Predict</button>
+            </div>
+
+            <!-- Metric Cards Grid -->
+            <div class="dashboard-hero ml-metrics-grid">
+              <div class="metric-card">
+                <div class="metric-icon-wrap" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="metric-content">
+                  <span class="metric-label">Projected Sales Revenue</span>
+                  <h3 id="ml-proj-revenue">₹0</h3>
+                  <span class="metric-trend positive" id="ml-hist-comparison"><i class="fas fa-arrow-trend-up"></i> ML Projected</span>
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-icon-wrap" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+                  <i class="fas fa-sack-dollar"></i>
+                </div>
+                <div class="metric-content">
+                  <span class="metric-label">Projected Net Profit</span>
+                  <h3 id="ml-proj-profit">₹0</h3>
+                  <span class="metric-trend positive" id="ml-proj-margin"><i class="fas fa-percentage"></i> 0.0% Margin</span>
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-icon-wrap" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">
+                  <i class="fas fa-boxes-packing"></i>
+                </div>
+                <div class="metric-content">
+                  <span class="metric-label">COGS & Storage Overhead</span>
+                  <h3 id="ml-proj-costs">₹0</h3>
+                  <span class="metric-trend neutral" id="ml-proj-cogs-breakdown">Holding + Purchase</span>
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-icon-wrap" style="background: rgba(14, 165, 233, 0.15); color: #38bdf8;">
+                  <i class="fas fa-clock-rotate-left"></i>
+                </div>
+                <div class="metric-content">
+                  <span class="metric-label">Operations Reduction</span>
+                  <h3 id="ml-ops-savings">0 hrs</h3>
+                  <span class="metric-trend positive" id="ml-holding-saved"><i class="fas fa-shield-halved"></i> EOQ Batch Saved</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Two Interactive Charts -->
+            <div class="dashboard-grid" style="margin-top: 1.5rem;">
+              <div class="dashboard-section chart-card" style="padding: 1.5rem;">
+                <div class="section-header" style="margin-bottom: 1rem;">
+                  <h3><i class="fas fa-arrow-trend-up"></i> Sales & Demand Forecast Curve</h3>
+                  <span class="badge" style="font-size: 0.75rem;">Scikit-Learn Ridge Model</span>
+                </div>
+                <div style="position: relative; height: 320px; width: 100%;">
+                  <canvas id="ml-sales-chart"></canvas>
+                </div>
+              </div>
+
+              <div class="dashboard-section chart-card" style="padding: 1.5rem;">
+                <div class="section-header" style="margin-bottom: 1rem;">
+                  <h3><i class="fas fa-chart-pie"></i> Profit & Loss (P&L) Breakdown</h3>
+                  <span class="badge" style="font-size: 0.75rem;">Revenue vs COGS vs OpEx</span>
+                </div>
+                <div style="position: relative; height: 320px; width: 100%;">
+                  <canvas id="ml-profit-chart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- Prescriptive AI Recommendations -->
+            <div class="dashboard-section" style="margin-top: 1.5rem; padding: 1.75rem;">
+              <div class="section-header" style="margin-bottom: 1.25rem;">
+                <div>
+                  <h3 style="font-size: 1.15rem;"><i class="fas fa-lightbulb" style="color: #fbbf24;"></i> Prescriptive Optimization Actions</h3>
+                  <p style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px;">Smart algorithmic recommendations to eliminate deadstock holding costs, optimize order batches (EOQ), and maximize profit margins.</p>
+                </div>
+                <span class="badge badge-primary" id="ml-rec-count">0 Actions Ready</span>
+              </div>
+              <div class="ml-recommendations-grid" id="ml-recommendations-container">
+                <!-- Dynamically generated AI recommendation cards -->
+              </div>
+            </div>
+
+            <!-- Product Forecast Table -->
+            <div class="dashboard-section" style="margin-top: 1.5rem; padding: 1.75rem;">
+              <div class="section-header" style="margin-bottom: 1rem;">
+                <h3><i class="fas fa-table-list"></i> Item-by-Item Profit & Demand Breakdown</h3>
+                <span style="font-size: 0.8rem; color: var(--text-secondary);">Forecasted units, days of supply, and projected margin</span>
+              </div>
+              <div style="overflow-x: auto;">
+                <table class="modern-table">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Selling Price</th>
+                      <th>Unit Cost</th>
+                      <th>Current Stock</th>
+                      <th>Days of Supply</th>
+                      <th>Forecast Units</th>
+                      <th>Projected Revenue</th>
+                      <th>Projected Net Profit</th>
+                      <th>Profit Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ml-products-table-body">
+                    <!-- Dynamic product rows -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -718,6 +984,7 @@
         </div>
         <form id="modal-form">
           <div class="modal-body">
+            <div class="modal-guidance" id="modal-guidance"></div>
             <div id="modal-fields"></div>
           </div>
           <div class="modal-footer">
@@ -730,6 +997,6 @@
       </div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}?v=2.1"></script>
   </body>
 </html>

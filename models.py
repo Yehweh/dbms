@@ -1,11 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from sqlalchemy import Identity
 
 db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = 'user'
-    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, Identity(start=1), primary_key=True)
     username = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(50), default='USER', nullable=False)
@@ -21,7 +22,7 @@ class User(db.Model):
 
 class Category(db.Model):
     __tablename__ = 'category'
-    category_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    category_id = db.Column(db.Integer, Identity(start=1), primary_key=True)
     category_name = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text, nullable=True)
 
@@ -34,7 +35,7 @@ class Category(db.Model):
 
 class Supplier(db.Model):
     __tablename__ = 'supplier'
-    supplier_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    supplier_id = db.Column(db.Integer, Identity(start=1), primary_key=True)
     supplier_name = db.Column(db.String(255), nullable=False)
     contact_no = db.Column(db.String(20), nullable=True)
     address = db.Column(db.Text, nullable=True)
@@ -49,7 +50,7 @@ class Supplier(db.Model):
 
 class Item(db.Model):
     __tablename__ = 'item'
-    item_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    item_id = db.Column(db.Integer, Identity(start=1), primary_key=True)
     item_name = db.Column(db.String(255), nullable=False)
     sku = db.Column(db.String(100), unique=True, nullable=False)
     price = db.Column(db.Float, nullable=False)
@@ -76,7 +77,7 @@ class Item(db.Model):
 
 class Stock(db.Model):
     __tablename__ = 'stock'
-    stock_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    stock_id = db.Column(db.Integer, Identity(start=1), primary_key=True)
     item_id = db.Column(db.Integer, db.ForeignKey('item.item_id'), nullable=False)
     quantity_available = db.Column(db.Integer, default=0)
     warehouse = db.Column(db.String(255), nullable=False)
@@ -97,7 +98,6 @@ class Stock(db.Model):
             'price': item.price if item else 0
         }
 
-
 class Order(db.Model):
     __tablename__ = 'order'
     order_id = db.Column(db.String(191), primary_key=True)
@@ -117,7 +117,7 @@ class Order(db.Model):
 
 class OrderDetail(db.Model):
     __tablename__ = 'orderdetail'
-    order_detail_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    order_detail_id = db.Column(db.Integer, Identity(start=1), primary_key=True)
     order_id = db.Column(db.String(191), db.ForeignKey('order.order_id'), nullable=False)
     item_id = db.Column(db.Integer, db.ForeignKey('item.item_id'), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
@@ -136,7 +136,7 @@ class OrderDetail(db.Model):
 
 class AuditLog(db.Model):
     __tablename__ = 'AuditLog'
-    audit_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    audit_id = db.Column(db.Integer, Identity(start=1), primary_key=True)
     table_name = db.Column(db.String(50), nullable=False)
     record_id = db.Column(db.Integer, nullable=False)
     action = db.Column(db.String(10), nullable=False)
@@ -160,7 +160,7 @@ class AuditLog(db.Model):
 
 class TransactionHistory(db.Model):
     __tablename__ = 'TransactionHistory'
-    transaction_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    transaction_id = db.Column(db.Integer, Identity(start=1), primary_key=True)
     item_id = db.Column(db.Integer, db.ForeignKey('item.item_id'), nullable=False)
     transaction_type = db.Column(db.String(20), nullable=True)
     quantity_changed = db.Column(db.Integer, nullable=True)
@@ -186,5 +186,3 @@ class TransactionHistory(db.Model):
             'created_by': user.username if user else 'System',
             'notes': self.notes
         }
-
-
